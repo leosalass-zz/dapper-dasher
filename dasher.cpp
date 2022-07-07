@@ -6,7 +6,7 @@ const int windowWidth{1280};
 const int windowHeigth{720};
 const Color backgroundColor{WHITE};
 const int targetFPS{60};
-const float gravityFroce{20}; // 9.8(m/s)/s
+const float gravityFroce{25}; // 9.8(m/s)/s
 const float gravityFrameUpdate{gravityFroce / targetFPS};
 
 int main()
@@ -18,32 +18,45 @@ int main()
     const int width{50};
     const int height{80};
     const int groundPos{windowHeigth - height};
-    const int jumpForce{10};
+    const int jumpVelocity{10};
 
     float posY{groundPos};
     float velocity{0};
+    bool isGrounded{posY >= groundPos};
+    bool isMultiJumpEnabled{false};
+    int jumpCounter{0};
+    int jumpsLimit{3};
 
     SetTargetFPS(targetFPS);
     while( !WindowShouldClose() ){
         // start drawing
         BeginDrawing();
         ClearBackground(backgroundColor);
-        
+
         // start game logic
-        if (posY >= groundPos)
+        isGrounded = posY >= groundPos;
+        if (isGrounded)
         {
             //grounded
             velocity = 0;
-        }                
+            posY = groundPos;
+            jumpCounter = 0;
+        }            
         else
         {
             //on air
             velocity += gravityFrameUpdate;
+            isMultiJumpEnabled = (jumpCounter < jumpsLimit);
         }
 
-        if (IsKeyDown(KEY_SPACE))
+        if (IsKeyPressed(KEY_SPACE))
         {
-            velocity = -jumpForce;
+            if (isGrounded || isMultiJumpEnabled)
+            {
+                jumpCounter += 1;
+                velocity = -jumpVelocity;
+                printf_s("jumpCounter: %i \n", jumpCounter);
+            }
         }
 
         posY += velocity;
