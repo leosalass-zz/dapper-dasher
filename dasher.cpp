@@ -2,15 +2,14 @@
 #include <string>
 using namespace std;
 
-const int windowWidth{1280};
-const int windowHeigth{720};
-const Color backgroundColor{WHITE};
-const int targetFPS{60};
-const float gravityFroce{25}; // 9.8(m/s)/s
-const float gravityFrameUpdate{gravityFroce / targetFPS};
-
 int main()
 {
+    const int windowWidth{1280};
+    const int windowHeigth{720};
+    const Color backgroundColor{WHITE};
+    const int targetFPS{60};
+    const float gravity{1'000};
+
     //Initialize the game window
     InitWindow(windowWidth, windowHeigth, "Dapper Dasher");
     
@@ -29,7 +28,7 @@ int main()
     scarfyPos.x = groundPos;
     scarfyPos.y = windowHeigth - scarfyRec.height;
 
-    const int jumpVelocity{10};
+    const int jumpVelocity{-600};//(pixel/second)
     float velocity{0};
     bool isGrounded{scarfyPos.y >= groundPos};
     bool isMultiJumpEnabled{false};
@@ -43,6 +42,8 @@ int main()
         ClearBackground(backgroundColor);
 
         // start game logic
+        float deltatime{GetFrameTime()};
+
         isGrounded = scarfyPos.y >= groundPos;
         if (isGrounded)
         {
@@ -54,7 +55,7 @@ int main()
         else
         {
             //on air
-            velocity += gravityFrameUpdate;
+            velocity += gravity * deltatime;
             isMultiJumpEnabled = (jumpCounter < jumpsLimit);
         }
 
@@ -63,12 +64,12 @@ int main()
             if (isGrounded || isMultiJumpEnabled)
             {
                 jumpCounter += 1;
-                velocity = -jumpVelocity;
+                velocity = jumpVelocity;
                 printf_s("jumpCounter: %i \n", jumpCounter);
             }
         }
-
-        scarfyPos.y += velocity;
+        //update Y position
+        scarfyPos.y += velocity * deltatime;
         //end game logic
 
         //printf_s("velocity: %i \n", velocity);
