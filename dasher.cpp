@@ -14,18 +14,27 @@ int main()
     //Initialize the game window
     InitWindow(windowWidth, windowHeigth, "Dapper Dasher");
     
-    //character
-    const int width{50};
-    const int height{80};
-    const int groundPos{windowHeigth - height};
-    const int jumpVelocity{10};
+    //character    
+    Texture2D scarfy = LoadTexture("./textures/scarfy.png");
+    
+    Rectangle scarfyRec;
+    scarfyRec.width = scarfy.width / 6;
+    scarfyRec.height = scarfy.height;
+    scarfyRec.x = 0;
+    scarfyRec.y = 0;
 
-    float posY{groundPos};
+    const int groundPos{windowHeigth - scarfyRec.height};
+
+    Vector2 scarfyPos;
+    scarfyPos.x = groundPos;
+    scarfyPos.y = windowHeigth - scarfyRec.height;
+
+    const int jumpVelocity{10};
     float velocity{0};
-    bool isGrounded{posY >= groundPos};
+    bool isGrounded{scarfyPos.y >= groundPos};
     bool isMultiJumpEnabled{false};
     int jumpCounter{0};
-    int jumpsLimit{3};
+    int jumpsLimit{2};
 
     SetTargetFPS(targetFPS);
     while( !WindowShouldClose() ){
@@ -34,12 +43,12 @@ int main()
         ClearBackground(backgroundColor);
 
         // start game logic
-        isGrounded = posY >= groundPos;
+        isGrounded = scarfyPos.y >= groundPos;
         if (isGrounded)
         {
             //grounded
             velocity = 0;
-            posY = groundPos;
+            scarfyPos.y = groundPos;
             jumpCounter = 0;
         }            
         else
@@ -59,18 +68,19 @@ int main()
             }
         }
 
-        posY += velocity;
+        scarfyPos.y += velocity;
         //end game logic
 
         //printf_s("velocity: %i \n", velocity);
         //printf_s("posY: %i \n", posY);
         //printf_s("groundPos: %i \n", groundPos);
 
-        DrawRectangle((windowWidth / 2) - (width / 2), posY, width, height, BLUE);
+        DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
         //end drawing
         EndDrawing();
     }
-    
+
+    UnloadTexture(scarfy);
     CloseWindow();
 }
