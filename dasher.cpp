@@ -35,6 +35,13 @@ int main()
     int jumpCounter{0};
     int jumpsLimit{2};
 
+    //animation frame
+    int frame{};
+
+    //amount of time before we update the animation frame
+    const float updateTime{1.0 / 12.0};
+    float runningTime{0};
+
     SetTargetFPS(targetFPS);
     while( !WindowShouldClose() ){
         // start drawing
@@ -75,6 +82,20 @@ int main()
         //printf_s("velocity: %i \n", velocity);
         //printf_s("posY: %i \n", posY);
         //printf_s("groundPos: %i \n", groundPos);
+
+        
+
+        runningTime += deltatime;
+
+        if(runningTime >= updateTime){
+            runningTime = 0.0;
+            frame++;
+
+            // update animation frame
+            scarfyRec.x = frame * scarfyRec.width;
+            if (frame > 5)
+                frame = 0;
+        }
 
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
