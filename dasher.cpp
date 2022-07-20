@@ -15,6 +15,11 @@ int main()
 
     //nebula
     Texture2D nebula = LoadTexture("./textures/12_nebula_spritesheet.png");
+    Rectangle nebulaRec{0.0, 0.0, nebula.width/8, nebula.height/8};
+    Vector2 nebulaPos{windowWidth, windowHeigth - nebulaRec.height};
+    
+    //nebula velocity (pixles/second)
+    int nebulaVelocity{-600};
 
     //character    
     Texture2D scarfy = LoadTexture("./textures/scarfy.png");    
@@ -78,7 +83,9 @@ int main()
             }
         }
         //update Y position
+        nebulaPos.x += nebulaVelocity * deltatime;
         scarfyPos.y += velocity * deltatime;
+
         //end game logic
 
         //printf_s("velocity: %i \n", velocity);
@@ -89,7 +96,7 @@ int main()
 
         runningTime += deltatime;
 
-        if(runningTime >= updateTime){
+        if(runningTime >= updateTime && isGrounded){
             runningTime = 0.0;
             frame++;
 
@@ -99,6 +106,10 @@ int main()
                 frame = 0;
         }
 
+        // Draw nebula
+        DrawTextureRec(nebula, nebulaRec, nebulaPos, WHITE);
+
+        //Draw scarfy
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
         //end drawing
