@@ -12,10 +12,12 @@ int main()
 
     //Initialize the game window
     InitWindow(windowWidth, windowHeigth, "Dapper Dasher");
-    
+
+    //nebula
+    Texture2D nebula = LoadTexture("./textures/12_nebula_spritesheet.png");
+
     //character    
-    Texture2D scarfy = LoadTexture("./textures/scarfy.png");
-    
+    Texture2D scarfy = LoadTexture("./textures/scarfy.png");    
     Rectangle scarfyRec;
     scarfyRec.width = scarfy.width / 6;
     scarfyRec.height = scarfy.height;
@@ -104,5 +106,6 @@ int main()
     }
 
     UnloadTexture(scarfy);
+    UnloadTexture(nebula);
     CloseWindow();
 }
